@@ -1,0 +1,80 @@
+[
+  {
+    "id": 1,
+    "title": "Rajasthan's Desert Majesty",
+    "image": "https://plus.unsplash.com/premium_photo-1691031428827-adf34ee712d4?q=80&w=2787&auto=format&fit=crop",
+    "summary": "A camel ride under the stars in Jaisalmer's Thar Desert...",
+    "date": "2025-08-01",
+    "content": "<p>Experience the magic of the Thar Desert with camel rides, golden dunes, and starlit nights in Jaisalmer. Walk through the historic forts, enjoy folk music, and indulge in Rajasthani cuisine.</p><p>The charm of Rajasthan lies in its timeless culture and vibrant traditions, making it a must-visit for explorers.</p>",
+    "tips": [
+      "Best time to visit: October to March",
+      "Carry light cotton during the day and a jacket for cold desert nights",
+      "Do not miss the evening folk music and dance shows"
+    ]
+  },
+  {
+    "id": 2,
+    "title": "A Weekend in Goa",
+    "image": "https://images.unsplash.com/photo-1614082242765-7c98ca0f3df3?w=900&auto=format&fit=crop&q=60",
+    "summary": "Beaches, sunsets, and Portuguese heritage await in Goa...",
+    "date": "2025-08-01",
+    "content": "<p>Goa is the ultimate beach destination of India. Relax on the sunny beaches, enjoy water sports, and explore the vibrant nightlife.</p><p>Portuguese heritage, seafood, and stunning sunsets make Goa a traveler’s paradise.</p>",
+    "tips": [
+      "Best time to visit: November to February",
+      "Try local Goan seafood delicacies",
+      "Explore both North and South Goa for unique experiences"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Varanasi: City of Lights",
+    "image": "https://images.unsplash.com/photo-1561359313-0639aad49ca6?w=900&auto=format&fit=crop&q=60",
+    "summary": "Experience the spiritual ghats along the Ganges River...",
+    "date": "2025-08-01",
+    "content": "<p>Varanasi is the spiritual capital of India. Witness the evening Ganga Aarti, explore the ancient ghats, and take a boat ride at sunrise for a truly magical experience.</p><p>The narrow streets filled with culture and history will leave you in awe.</p>",
+    "tips": [
+      "Best time to visit: October to March",
+      "Attend the Ganga Aarti at Dashashwamedh Ghat",
+      "Try the famous Banarasi paan and lassi"
+    ]
+  },
+  {
+    "id": 4,
+    "title": "White Rann of Kutch",
+    "image": "https://images.unsplash.com/photo-1628265512314-a9464859fe0c?w=900&auto=format&fit=crop&q=60",
+    "summary": "Walk across the endless white salt desert under the moon...",
+    "date": "2025-08-01",
+    "content": "<p>The Rann of Kutch is a surreal salt desert in Gujarat. Visit during the Rann Utsav to experience cultural performances, camel rides, and breathtaking full moon views.</p><p>The endless white expanse of the desert is a photographer’s dream.</p>",
+    "tips": [
+      "Best time to visit: November to February (Rann Utsav period)",
+      "Carry warm clothes for cold nights",
+      "Do not miss the panoramic sunset and full moon view"
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Himalayan Adventures",
+    "image": "https://images.unsplash.com/photo-1494806812796-244fe51b774d?q=80&w=2934&auto=format&fit=crop",
+    "summary": "Trekking in Himachal's snow-capped mountains...",
+    "date": "2025-08-01",
+    "content": "<p>The Himalayas offer some of the best trekking and adventure experiences in India. From Himachal Pradesh to Uttarakhand, explore snow-capped peaks, serene valleys, and charming villages.</p><p>Perfect for thrill-seekers and nature lovers alike.</p>",
+    "tips": [
+      "Best time to visit: April to June and September to November",
+      "Carry proper trekking gear and warm clothes",
+      "Stay hydrated and acclimatize properly for high altitudes"
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Kerala’s Backwater Bliss",
+    "image": "https://plus.unsplash.com/premium_photo-1697729438401-fcb4ff66d9a8?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8a2VyYWxhfGVufDB8fDB8fHww",
+    "summary": "Discover tranquility in the lush greenery of Alleppey...",
+    "date": "2025-08-01",
+    "content": "<p>Kerala’s Alleppey backwaters are a paradise for those seeking tranquility. Glide through palm-lined canals on houseboats, surrounded by lush greenery and serene waters.</p><p>Enjoy the local cuisine, Ayurvedic massages, and peaceful vibes.</p>",
+    "tips": [
+      "Best time to visit: September to March",
+      "Book a houseboat stay for a memorable experience",
+      "Try authentic Kerala meals on the houseboat"
+    ]
+  }
+]

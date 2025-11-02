@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - TravelTales</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: url("https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd") no-repeat center center/cover;
+      height: 100vh;
+    }
+
+    /* Dark overlay */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 0;
+    }
+
+    /* Glassmorphism card */
+    .signup-card {
+      position: relative;
+      z-index: 1;
+      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .signup-card input {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .signup-card input::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .signup-card input:focus {
+      outline: none;
+      border-color: #f97316;
+      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);
+    }
+  </style>
+</head>
+<body class="flex justify-center items-center">
+
+  <form action="../signup.php" method="POST" class="signup-card p-8 rounded-2xl shadow-2xl w-96 space-y-6">
+    <h2 class="text-3xl font-bold text-center text-white">Sign Up</h2>
+
+    <input type="text" name="name" placeholder="Full Name" required class="w-full px-4 py-3 rounded-lg" />
+    <input type="email" name="email" placeholder="Email" required class="w-full px-4 py-3 rounded-lg" />
+    <input type="password" name="password" placeholder="Password" required class="w-full px-4 py-3 rounded-lg" />
+    
+    <button class="w-full bg-orange-500 hover:bg-orange-600 text-white px-4 py-3 rounded-lg font-medium transition">
+      Sign Up
+    </button>
+    
+    <p class="text-center text-sm text-white">
+      Already have an account? 
+      <a href="login.html" class="text-orange-400 hover:underline">Login</a>
+    </p>
+  </form>
+
+</body>
+</html>
