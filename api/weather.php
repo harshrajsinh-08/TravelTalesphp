@@ -9,85 +9,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-// Simple weather API endpoint for future integration
-// This is a placeholder that returns mock data
-// In production, this would integrate with OpenWeatherMap or similar service
+// OpenWeatherMap API configuration
+const OPENWEATHER_API_KEY = '0803af3c4dd129fe61e0256095fc930f';
+const OPENWEATHER_BASE_URL = 'https://api.openweathermap.org/data/2.5';
 
 $action = $_GET['action'] ?? '';
 $city = $_GET['city'] ?? '';
 $lat = $_GET['lat'] ?? '';
 $lon = $_GET['lon'] ?? '';
 
-function generateMockWeatherData($cityName) {
-    $baseTemp = 25;
-    $tempVariation = rand(-10, 10);
-    $temp = $baseTemp + $tempVariation;
+function fetchWeatherData($url) {
+    $context = stream_context_create([
+        'http' => [
+            'timeout' => 10,
+            'user_agent' => 'TravelTales Weather App'
+        ]
+    ]);
     
-    $conditions = ['Clear', 'Clouds', 'Rain', 'Drizzle', 'Mist'];
-    $condition = $conditions[array_rand($conditions)];
+    $response = @file_get_contents($url, false, $context);
     
-    $descriptions = [
-        'Clear' => 'clear sky',
-        'Clouds' => 'scattered clouds',
-        'Rain' => 'light rain',
-        'Drizzle' => 'light drizzle',
-        'Mist' => 'mist'
-    ];
-    
-    return [
-        'name' => $cityName,
-        'sys' => ['country' => 'IN'],
-        'main' => [
-            'temp' => $temp,
-            'feels_like' => $temp + rand(-2, 2),
-            'temp_min' => $temp - 3,
-            'temp_max' => $temp + 5,
-            'humidity' => rand(40, 80)
-        ],
-        'weather' => [[
-            'main' => $condition,
-            'description' => $descriptions[$condition]
-        ]],
-        'wind' => [
-            'speed' => rand(2, 12)
-        ],
-        'visibility' => rand(5000, 10000)
-    ];
-}
-
-function generateMockForecastData($cityName) {
-    $forecasts = [];
-    $baseTemp = 25;
-    
-    for ($i = 0; $i < 5; $i++) {
-        $date = time() + ($i * 24 * 60 * 60);
-        $tempVariation = rand(-7, 7);
-        $temp = $baseTemp + $tempVariation;
-        
-        $conditions = ['Clear', 'Clouds', 'Rain', 'Drizzle'];
-        $condition = $conditions[array_rand($conditions)];
-        
-        $descriptions = [
-            'Clear' => 'clear sky',
-            'Clouds' => 'few clouds',
-            'Rain' => 'light rain',
-            'Drizzle' => 'light drizzle'
-        ];
-        
-        $forecasts[] = [
-            'dt' => $date,
-            'main' => [
-                'temp' => $temp,
-                'humidity' => rand(50, 80)
-            ],
-            'weather' => [[
-                'main' => $condition,
-                'description' => $descriptions[$condition]
-            ]]
-        ];
+    if ($response === false) {
+        throw new Exception('Failed to fetch weather data from API');
     }
     
-    return ['list' => $forecasts];
+    $data = json_decode($response, true);
+    
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        throw new Exception('Invalid JSON response from weather API');
+    }
+    
+    if (isset($data['cod']) && $data['cod'] !== 200 && $data['cod'] !== '200') {
+        throw new Exception($data['message'] ?? 'Weather API error');
+    }
+    
+    return $data;
+}
+
+function getCurrentWeatherByCity($city) {
+    $url = OPENWEATHER_BASE_URL . '/weather?' . http_build_query([
+        'q' => $city,
+        'appid' => OPENWEATHER_API_KEY,
+        'units' => 'metric'
+    ]);
+    
+    return fetchWeatherData($url);
+}
+
+function getCurrentWeatherByCoords($lat, $lon) {
+    $url = OPENWEATHER_BASE_URL . '/weather?' . http_build_query([
+        'lat' => $lat,
+        'lon' => $lon,
+        'appid' => OPENWEATHER_API_KEY,
+        'units' => 'metric'
+    ]);
+    
+    return fetchWeatherData($url);
+}
+
+function getForecastByCity($city) {
+    $url = OPENWEATHER_BASE_URL . '/forecast?' . http_build_query([
+        'q' => $city,
+        'appid' => OPENWEATHER_API_KEY,
+        'units' => 'metric'
+    ]);
+    
+    return fetchWeatherData($url);
 }
 
 try {
@@ -96,7 +82,7 @@ try {
             if (empty($city)) {
                 throw new Exception('City parameter is required');
             }
-            $weatherData = generateMockWeatherData($city);
+            $weatherData = getCurrentWeatherByCity($city);
             echo json_encode($weatherData);
             break;
             
@@ -104,7 +90,7 @@ try {
             if (empty($city)) {
                 throw new Exception('City parameter is required');
             }
-            $forecastData = generateMockForecastData($city);
+            $forecastData = getForecastByCity($city);
             echo json_encode($forecastData);
             break;
             
@@ -112,7 +98,7 @@ try {
             if (empty($lat) || empty($lon)) {
                 throw new Exception('Latitude and longitude parameters are required');
             }
-            $weatherData = generateMockWeatherData('Your Location');
+            $weatherData = getCurrentWeatherByCoords($lat, $lon);
             echo json_encode($weatherData);
             break;
             

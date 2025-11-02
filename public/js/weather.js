@@ -85,6 +85,92 @@ async function searchWeatherByCity(cityName) {
   await getWeatherData(cityName);
 }
 
+// Get weather by coordinates (for location-based weather)
+async function getWeatherByLocation() {
+  if (!navigator.geolocation) {
+    showError("Geolocation is not supported by this browser.");
+    return;
+  }
+
+  showLoading();
+
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      try {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+
+        // Fetch current weather by coordinates
+        const currentResponse = await fetch(`/api/weather.php?action=current_coords&lat=${lat}&lon=${lon}`);
+        if (!currentResponse.ok) {
+          throw new Error('Failed to fetch current weather');
+        }
+        const currentWeatherData = await currentResponse.json();
+
+        if (currentWeatherData.error) {
+          throw new Error(currentWeatherData.message);
+        }
+
+        // Update city input with the location name
+        document.getElementById("cityInput").value = currentWeatherData.name;
+
+        // Fetch forecast using the city name
+        const forecastResponse = await fetch(`/api/weather.php?action=forecast&city=${encodeURIComponent(currentWeatherData.name)}`);
+        if (!forecastResponse.ok) {
+          throw new Error('Failed to fetch weather forecast');
+        }
+        const forecastData = await forecastResponse.json();
+
+        if (forecastData.error) {
+          throw new Error(forecastData.message);
+        }
+
+        displayCurrentWeather(currentWeatherData);
+        displayForecast(forecastData);
+
+        hideLoading();
+
+        // Show weather sections
+        document.getElementById("currentWeatherSection").classList.remove("hidden");
+        document.getElementById("forecastSection").classList.remove("hidden");
+
+        // Scroll to weather section
+        document.getElementById("currentWeatherSection").scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      } catch (error) {
+        hideLoading();
+        showError("Failed to fetch weather data for your location. Please try again.");
+        console.error("Location Weather API Error:", error);
+      }
+    },
+    (error) => {
+      hideLoading();
+      let errorMessage = "Unable to retrieve your location. ";
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          errorMessage += "Please allow location access and try again.";
+          break;
+        case error.POSITION_UNAVAILABLE:
+          errorMessage += "Location information is unavailable.";
+          break;
+        case error.TIMEOUT:
+          errorMessage += "Location request timed out.";
+          break;
+        default:
+          errorMessage += "An unknown error occurred.";
+          break;
+      }
+      showError(errorMessage);
+    },
+    {
+      timeout: 10000,
+      enableHighAccuracy: true
+    }
+  );
+}
+
 
 
 // Get weather data by city name
@@ -92,13 +178,30 @@ async function getWeatherData(city) {
   showLoading();
 
   try {
-    // For demo purposes, we'll use mock data since we don't have a real API key
-    // In production, replace this with actual API calls
-    const mockWeatherData = generateMockWeatherData(city);
-    const mockForecastData = generateMockForecastData(city);
+    // Fetch current weather
+    const currentResponse = await fetch(`/api/weather.php?action=current&city=${encodeURIComponent(city)}`);
+    if (!currentResponse.ok) {
+      throw new Error('Failed to fetch current weather');
+    }
+    const currentWeatherData = await currentResponse.json();
 
-    displayCurrentWeather(mockWeatherData);
-    displayForecast(mockForecastData);
+    if (currentWeatherData.error) {
+      throw new Error(currentWeatherData.message);
+    }
+
+    // Fetch forecast
+    const forecastResponse = await fetch(`/api/weather.php?action=forecast&city=${encodeURIComponent(city)}`);
+    if (!forecastResponse.ok) {
+      throw new Error('Failed to fetch weather forecast');
+    }
+    const forecastData = await forecastResponse.json();
+
+    if (forecastData.error) {
+      throw new Error(forecastData.message);
+    }
+
+    displayCurrentWeather(currentWeatherData);
+    displayForecast(forecastData);
 
     hideLoading();
 
@@ -223,21 +326,39 @@ function displayForecast(data) {
 
 // Load weather for popular cities
 async function loadPopularCitiesWeather() {
-  popularCities.forEach(async (city) => {
+  for (const city of popularCities) {
     try {
-      // Using mock data for demo
-      const mockData = generateMockWeatherData(city);
-      const cityId = city.toLowerCase();
+      const response = await fetch(`/api/weather.php?action=current&city=${encodeURIComponent(city)}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch weather');
+      }
+      
+      const weatherData = await response.json();
+      if (weatherData.error) {
+        throw new Error(weatherData.message);
+      }
 
-      document.getElementById(`${cityId}-temp`).textContent = `${Math.round(
-        mockData.main.temp
-      )}°C`;
-      document.getElementById(`${cityId}-desc`).textContent =
-        mockData.weather[0].description;
+      const cityId = city.toLowerCase();
+      const tempElement = document.getElementById(`${cityId}-temp`);
+      const descElement = document.getElementById(`${cityId}-desc`);
+      
+      if (tempElement && descElement) {
+        tempElement.textContent = `${Math.round(weatherData.main.temp)}°C`;
+        descElement.textContent = weatherData.weather[0].description;
+      }
     } catch (error) {
       console.error(`Failed to load weather for ${city}:`, error);
+      // Fallback to show placeholder text
+      const cityId = city.toLowerCase();
+      const tempElement = document.getElementById(`${cityId}-temp`);
+      const descElement = document.getElementById(`${cityId}-desc`);
+      
+      if (tempElement && descElement) {
+        tempElement.textContent = '--°C';
+        descElement.textContent = 'Unable to load';
+      }
     }
-  });
+  }
 }
 
 // Show city suggestions (mock implementation)
@@ -320,85 +441,7 @@ function getWeatherIcon(condition) {
   return icons[condition] || "🌤️";
 }
 
-// Generate mock weather data for demo purposes
-function generateMockWeatherData(city) {
-  const baseTemp = 25;
-  const tempVariation = Math.random() * 20 - 10; // -10 to +10
-  const temp = baseTemp + tempVariation;
 
-  const conditions = ["Clear", "Clouds", "Rain", "Drizzle", "Mist"];
-  const condition = conditions[Math.floor(Math.random() * conditions.length)];
-
-  const descriptions = {
-    Clear: "clear sky",
-    Clouds: "scattered clouds",
-    Rain: "light rain",
-    Drizzle: "light drizzle",
-    Mist: "mist",
-  };
-
-  return {
-    name: city,
-    sys: { country: "IN" },
-    main: {
-      temp: temp,
-      feels_like: temp + (Math.random() * 4 - 2),
-      temp_min: temp - 3,
-      temp_max: temp + 5,
-      humidity: Math.floor(Math.random() * 40) + 40, // 40-80%
-    },
-    weather: [
-      {
-        main: condition,
-        description: descriptions[condition],
-      },
-    ],
-    wind: {
-      speed: Math.random() * 10 + 2, // 2-12 m/s
-    },
-    visibility: Math.floor(Math.random() * 5000) + 5000, // 5-10km
-  };
-}
-
-// Generate mock forecast data
-function generateMockForecastData(city) {
-  const forecasts = [];
-  const baseTemp = 25;
-
-  for (let i = 0; i < 5; i++) {
-    const date = new Date();
-    date.setDate(date.getDate() + i);
-
-    const tempVariation = Math.random() * 15 - 7.5;
-    const temp = baseTemp + tempVariation;
-
-    const conditions = ["Clear", "Clouds", "Rain", "Drizzle"];
-    const condition = conditions[Math.floor(Math.random() * conditions.length)];
-
-    const descriptions = {
-      Clear: "clear sky",
-      Clouds: "few clouds",
-      Rain: "light rain",
-      Drizzle: "light drizzle",
-    };
-
-    forecasts.push({
-      dt: date.getTime() / 1000,
-      main: {
-        temp: temp,
-        humidity: Math.floor(Math.random() * 30) + 50,
-      },
-      weather: [
-        {
-          main: condition,
-          description: descriptions[condition],
-        },
-      ],
-    });
-  }
-
-  return { list: forecasts };
-}
 
 // Hide city suggestions when clicking outside
 document.addEventListener("click", function (e) {

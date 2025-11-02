@@ -4,12 +4,13 @@
 The weather page provides real-time weather information for Indian cities with a clean, responsive design that matches the TravelTales website aesthetic.
 
 ## Features
-- **Real-time Weather Data**: Current weather conditions for any Indian city
-- **5-Day Forecast**: Extended weather predictions
-- **Location-based Weather**: Get weather for your current location
+- **Real-time Weather Data**: Current weather conditions for cities worldwide
+- **5-Day Forecast**: Extended weather predictions with detailed information
+- **Location-based Weather**: Get weather for your current location using GPS
 - **Popular Cities**: Quick access to weather for major Indian cities
+- **City Search**: Search for weather in any city with auto-complete suggestions
 - **Responsive Design**: Works perfectly on desktop and mobile devices
-- **Search Suggestions**: Auto-complete for Indian city names
+- **Error Handling**: Graceful error handling with user-friendly messages
 
 ## Files Added
 - `weather.php` - Main weather page
@@ -18,18 +19,30 @@ The weather page provides real-time weather information for Indian cities with a
 - `WEATHER_SETUP.md` - This setup guide
 
 ## Current Implementation
-The weather page currently uses **mock data** for demonstration purposes. This allows you to see the full functionality without requiring API keys.
+The weather page now uses **real weather data** from OpenWeatherMap API. The system fetches live weather information including current conditions and 5-day forecasts.
 
-## Setting Up Real Weather Data
+## Weather Data Source
+The application is configured to use OpenWeatherMap API with the following features:
+- Real-time current weather data
+- 5-day weather forecasts
+- Location-based weather (using GPS coordinates)
+- Weather data for cities worldwide
 
-### Option 1: OpenWeatherMap API (Recommended)
-1. Sign up for a free account at [OpenWeatherMap](https://openweathermap.org/api)
-2. Get your free API key
-3. Replace `your_openweathermap_api_key_here` in `public/js/weather.js` with your actual API key
-4. Update the API calls in `weather.js` to use real endpoints instead of mock data
+## API Key Configuration
+The weather system is currently configured with a working OpenWeatherMap API key. If you need to change the API key:
 
-### Option 2: Other Weather APIs
-You can integrate with other weather services like:
+1. Update the API key in `api/weather.php` (line 11):
+   ```php
+   const OPENWEATHER_API_KEY = 'your_new_api_key_here';
+   ```
+
+2. Optionally update the API key in `public/js/weather.js` (line 2) if you plan to make direct client-side calls:
+   ```javascript
+   const WEATHER_API_KEY = "your_new_api_key_here";
+   ```
+
+### Alternative Weather APIs
+You can integrate with other weather services by modifying the API endpoints in `api/weather.php`:
 - WeatherAPI
 - AccuWeather
 - Weather Underground

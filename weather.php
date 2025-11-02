@@ -75,6 +75,14 @@ $userEmail = $_SESSION['user'];
         <i class="bi bi-search"></i>
         Search Weather
       </button>
+      <button 
+        onclick="getWeatherByLocation()" 
+        class="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-full flex items-center justify-center gap-2"
+        id="locationBtn"
+      >
+        <i class="bi bi-geo-alt"></i>
+        My Location
+      </button>
 
     </div>
   </div>
