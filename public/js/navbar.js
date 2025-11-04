@@ -6,12 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const isHidden = mobileMenu.classList.contains('hidden');
 
     if (isHidden) {
+      // Menu show karte hain smooth animation ke saath
       mobileMenu.classList.remove('hidden');
       setTimeout(() => {
         mobileMenu.classList.remove('opacity-0', '-translate-y-5');
         mobileMenu.classList.add('opacity-100', 'translate-y-0');
       }, 10);
     } else {
+      // Menu hide karte hain
       mobileMenu.classList.remove('opacity-100', 'translate-y-0');
       mobileMenu.classList.add('opacity-0', '-translate-y-5');
       setTimeout(() => {

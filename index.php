@@ -5,7 +5,7 @@ require 'config/db.php';
 $page_title = "TravelTales - Discover India";
 $additional_scripts = ['public/js/trip-planner.js'];
 
-// Redirect if user not logged in
+// Agar user login nahi hai toh login page pe bhej do
 if (!isset($_SESSION['user'])) {
     header("Location: templates/login.html");
     exit();
@@ -13,14 +13,21 @@ if (!isset($_SESSION['user'])) {
 
 $userEmail = $_SESSION['user'];
 
-// Fetch latest 3 blogs
-$stmt = $pdo->query("SELECT * FROM blogs ORDER BY created_at DESC LIMIT 3");
-$latestBlogs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Latest 3 blogs fetch karte hain homepage ke liye
+$query = "SELECT * FROM blogs ORDER BY created_at DESC LIMIT 3";
+$result = $conn->query($query);
+$latestBlogs = [];
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $latestBlogs[] = $row;
+    }
+}
 
-// Fetch logged-in user profile
-$stmtUser = $pdo->prepare("SELECT * FROM users WHERE email = ?");
-$stmtUser->execute([$userEmail]);
-$user = $stmtUser->fetch(PDO::FETCH_ASSOC);
+// Login kiye hue user ka profile data fetch karte hain
+$userEmail = $conn->real_escape_string($userEmail);
+$query = "SELECT * FROM users WHERE email = '$userEmail'";
+$result = $conn->query($query);
+$user = $result ? $result->fetch_assoc() : null;
 
 $profilePic = $user['profile_pic'] ?? 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=1024&auto=format&fit=crop';
 $userName = $user['name'] ?? 'Traveler';

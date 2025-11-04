@@ -4,11 +4,18 @@ require 'config/db.php';
 
 $page_title = "Travel Blogs - TravelTales";
 
-// Fetch all blogs from the database
-$stmt = $pdo->query("SELECT * FROM blogs ORDER BY created_at DESC");
-$blogs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Saare blogs ko database se fetch karte hain - latest pehle
+$query = "SELECT * FROM blogs ORDER BY created_at DESC";
+$result = $conn->query($query);
 
-$userEmail = $_SESSION['user'] ?? null;
+$blogs = [];
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $blogs[] = $row;
+    }
+}
+
+$userEmail = isset($_SESSION['user']) ? $_SESSION['user'] : null;
 
 include 'includes/header.php';
 include 'includes/navbar.php';

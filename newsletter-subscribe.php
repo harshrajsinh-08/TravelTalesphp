@@ -10,16 +10,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $email = trim($_POST['email'] ?? '');
         
-        // Validate email
+        // Email validation - basic check karte hain
         if (empty($email)) {
             throw new Exception('Email is required');
         }
         
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        // Simple email validation - student project ke liye basic hai
+        if (empty($email) || !strpos($email, '@')) {
             throw new Exception('Please enter a valid email address');
         }
         
-        // Create newsletter_subscribers table if it doesn't exist
+        // Newsletter table banate hain agar exist nahi karta
         $createTableSQL = "
             CREATE TABLE IF NOT EXISTS newsletter_subscribers (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -31,12 +32,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
         ";
         
-        $pdo->exec($createTableSQL);
+        $conn->query($createTableSQL);
         
         // Check if email already exists
-        $checkStmt = $pdo->prepare("SELECT id, is_active FROM newsletter_subscribers WHERE email = ?");
-        $checkStmt->execute([$email]);
-        $existing = $checkStmt->fetch(PDO::FETCH_ASSOC);
+        $email = $conn->real_escape_string($email);
+        $checkQuery = "SELECT id, is_active FROM newsletter_subscribers WHERE email = '$email'";
+        $result = $conn->query($checkQuery);
+        $existing = $result ? $result->fetch_assoc() : null;
         
         if ($existing) {
             if ($existing['is_active']) {
@@ -44,16 +46,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $messageType = 'info';
             } else {
                 // Reactivate subscription
-                $updateStmt = $pdo->prepare("UPDATE newsletter_subscribers SET is_active = TRUE, subscribed_at = CURRENT_TIMESTAMP WHERE email = ?");
-                $updateStmt->execute([$email]);
+                $updateQuery = "UPDATE newsletter_subscribers SET is_active = TRUE, subscribed_at = CURRENT_TIMESTAMP WHERE email = '$email'";
+                $conn->query($updateQuery);
                 
                 $message = 'Welcome back! Your subscription has been reactivated.';
                 $messageType = 'success';
             }
         } else {
             // Insert new subscription
-            $insertStmt = $pdo->prepare("INSERT INTO newsletter_subscribers (email) VALUES (?)");
-            $insertStmt->execute([$email]);
+            $insertQuery = "INSERT INTO newsletter_subscribers (email) VALUES ('$email')";
+            $conn->query($insertQuery);
             
             $message = 'Thank you for subscribing! You\'ll receive our latest travel updates.';
             $messageType = 'success';

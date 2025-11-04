@@ -9,17 +9,18 @@ if (!isset($_SESSION['user'])) {
 
 $userEmail = $_SESSION['user'];
 
-// Fetch current user data
-$stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
-$stmt->execute([$userEmail]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+// Current user ka data fetch karte hain
+$userEmail = $conn->real_escape_string($userEmail);
+$query = "SELECT * FROM users WHERE email = '$userEmail'";
+$result = $conn->query($query);
+$user = $result ? $result->fetch_assoc() : null;
 
-// Prepare badges string for input display (MySQL compatible)
+// Badges ko input field mein show karne ke liye prepare karte hain
 $existingBadges = [];
 if (!empty($user['badges'])) {
-    // Handle both comma-separated and JSON format
+    // Comma-separated format handle karte hain
     if (strpos($user['badges'], '{') === 0) {
-        // PostgreSQL-style array format
+        // PostgreSQL style format
         $badges = trim($user['badges'], '{}');
         $existingBadges = array_map('trim', explode(',', $badges));
     } else {
@@ -38,64 +39,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $badgesArray = array_filter(array_map('trim', explode(',', $badgesInput)));
     $badgesString = implode(',', $badgesArray);
 
-    // Handle profile picture upload with security
+    // Simple profile picture upload for student project
     $profilePic = $user['profile_pic'] ?? 'default.jpg';
     if (!empty($_FILES['profile_pic']['name'])) {
-        // Check for upload errors first
-        if ($_FILES['profile_pic']['error'] !== UPLOAD_ERR_OK) {
-            $uploadErrors = [
-                UPLOAD_ERR_INI_SIZE => 'File is too large (server limit)',
-                UPLOAD_ERR_FORM_SIZE => 'File is too large (form limit)', 
-                UPLOAD_ERR_PARTIAL => 'File was only partially uploaded',
-                UPLOAD_ERR_NO_FILE => 'No file was uploaded',
-                UPLOAD_ERR_NO_TMP_DIR => 'Missing temporary folder',
-                UPLOAD_ERR_CANT_WRITE => 'Failed to write file to disk',
-                UPLOAD_ERR_EXTENSION => 'File upload stopped by extension'
-            ];
-            header("Location: profile.php?error=upload");
-            exit();
-        }
-        
         $targetDir = "uploads/";
         
-        // Create directory with better error handling
         if (!is_dir($targetDir)) {
             mkdir($targetDir, 0755, true);
         }
         
-        // Validate file type (both MIME type and extension)
-        $allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-        
-        $fileType = $_FILES['profile_pic']['type'];
-        $extension = strtolower(pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION));
-        
-        if (!in_array($fileType, $allowedMimeTypes) && !in_array($extension, $allowedExtensions)) {
-            header("Location: profile.php?error=filetype");
-            exit();
-        }
-        
-        // Validate file size (2MB max for profile pics)
-        if ($_FILES['profile_pic']['size'] > 2 * 1024 * 1024) {
-            header("Location: profile.php?error=filesize");
-            exit();
-        }
-        
-        // Generate secure filename
-        $fileName = uniqid() . "_" . time() . "." . $extension;
+        $fileName = uniqid() . "_" . $_FILES['profile_pic']['name'];
         $targetFile = $targetDir . $fileName;
 
-        // Attempt to move uploaded file with better error reporting
         if (move_uploaded_file($_FILES['profile_pic']['tmp_name'], $targetFile)) {
             $profilePic = $targetFile;
         }
     }
 
     // Update user data
-    $stmt = $pdo->prepare("UPDATE users 
-                           SET name = ?, bio = ?, badges = ?, profile_pic = ? 
-                           WHERE email = ?");
-    $stmt->execute([$name, $bio, $badgesString, $profilePic, $userEmail]);
+    $name = $conn->real_escape_string($name);
+    $bio = $conn->real_escape_string($bio);
+    $badgesString = $conn->real_escape_string($badgesString);
+    $profilePic = $conn->real_escape_string($profilePic);
+    $userEmail = $conn->real_escape_string($userEmail);
+    
+    $query = "UPDATE users SET name = '$name', bio = '$bio', badges = '$badgesString', profile_pic = '$profilePic' WHERE email = '$userEmail'";
+    $conn->query($query);
 
     header("Location: profile.php");
     exit();

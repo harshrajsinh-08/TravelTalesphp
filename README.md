@@ -1,6 +1,8 @@
-# TravelTales - Travel Blog Platform
+# TravelTales - Travel Blog Platform (Student Project Version)
 
-A comprehensive travel blog platform built with PHP, MySQL, and modern web technologies. Share your travel experiences, discover new destinations, and plan your next adventure.
+A simplified travel blog platform built with PHP, MySQL, and modern web technologies. This version has been adapted for educational purposes with simplified security features and MySQLi database operations.
+
+> **⚠️ Important**: This is a student project version with simplified security features. **Do not use in production environments.**
 
 ## Features
 
@@ -16,8 +18,17 @@ A comprehensive travel blog platform built with PHP, MySQL, and modern web techn
 
 - PHP 7.4 or higher
 - MySQL 5.7 or higher
-- Web server (Apache/Nginx)
-- Composer (optional, for dependencies)
+- Web server (Apache/Nginx/XAMPP/WAMP)
+- Basic understanding of PHP and MySQL
+
+## Student Project Features
+
+This version includes educational simplifications:
+- **MySQLi Database Operations**: Converted from PDO to MySQLi for simpler syntax
+- **Simplified Authentication**: Plain text password storage (educational purposes only)
+- **Basic File Uploads**: Minimal validation for easier understanding
+- **Direct SQL Queries**: Using `real_escape_string()` instead of prepared statements
+- **Simplified Error Handling**: Basic error reporting for learning
 
 ## Installation
 
@@ -53,12 +64,12 @@ A comprehensive travel blog platform built with PHP, MySQL, and modern web techn
    ```
 
 3. **Configure Database Connection**
-   - Update `db.php` with your database credentials:
+   - Update `config/config.php` with your database credentials:
    ```php
-   $host = "localhost";
-   $dbname = "traveltales";
-   $user = "your_username";
-   $pass = "your_password";
+   define('DB_HOST', 'localhost');
+   define('DB_NAME', 'traveltales');
+   define('DB_USER', 'your_username');
+   define('DB_PASS', 'your_password');
    ```
 
 4. **Set Permissions**
@@ -121,13 +132,24 @@ traveltales/
 └── README.md              # Documentation
 ```
 
-## Security Features
+## Educational Features (Simplified for Learning)
 
-- **CSRF Protection**: Forms protected against cross-site request forgery
-- **File Upload Validation**: Secure file upload with type and size validation
-- **Input Sanitization**: All user inputs are sanitized
-- **Password Hashing**: Secure password storage with bcrypt
-- **Error Handling**: Comprehensive error logging and user-friendly error pages
+- **Basic Input Sanitization**: Using `htmlspecialchars()` and `real_escape_string()`
+- **Simple File Uploads**: Basic file upload functionality without complex validation
+- **Plain Text Passwords**: For educational purposes (never use in production!)
+- **MySQLi Operations**: Direct database queries for easier understanding
+- **Basic Error Handling**: Simple error reporting for debugging
+
+## Security Notice
+
+This student version has intentionally simplified security features for educational purposes:
+- Passwords are stored in plain text
+- Minimal file upload validation
+- Basic SQL injection protection only
+- No CSRF protection
+- No advanced security headers
+
+**Never deploy this version to a production server!**
 
 ## Sample Data Included
 

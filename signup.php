@@ -1,40 +1,33 @@
 <?php
 require 'config/db.php';
 
-// Validate input
+// Sabse pehle check karte hain ki saare fields bhare hain ya nahi
 if (empty($_POST['name']) || empty($_POST['email']) || empty($_POST['password'])) {
     header("Location: signup.html?error=empty");
     exit();
 }
 
-// Validate email format
-if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-    header("Location: signup.html?error=invalid_email");
-    exit();
-}
+$name = $conn->real_escape_string(trim($_POST['name']));
+$email = $conn->real_escape_string(trim($_POST['email']));
+$password = $conn->real_escape_string($_POST['password']); // Plain text password - student project hai
 
-// Validate password strength
-if (strlen($_POST['password']) < 6) {
-    header("Location: signup.html?error=weak_password");
-    exit();
-}
+// Pehle check karte hain ki yeh email already registered hai ya nahi
+$checkQuery = "SELECT * FROM users WHERE email = '$email'";
+$result = $conn->query($checkQuery);
 
-$name = trim($_POST['name']);
-$email = trim($_POST['email']);
-$password = password_hash($_POST['password'], PASSWORD_BCRYPT);
-
-// Check if user already exists
-$stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
-$stmt->execute([$email]);
-if ($stmt->rowCount() > 0) {
+if ($result && $result->num_rows > 0) {
     header("Location: templates/signup.html?error=exists");
     exit();
 }
 
-// Insert new user
-$stmt = $pdo->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
-$stmt->execute([$name, $email, $password]);
+// Naya user database mein add karte hain
+$insertQuery = "INSERT INTO users (name, email, password) VALUES ('$name', '$email', '$password')";
 
-header("Location: templates/login.html?signup=success");
+if ($conn->query($insertQuery)) {
+    header("Location: templates/login.html?signup=success");
+} else {
+    header("Location: templates/signup.html?error=database");
+}
+
 exit();
 ?>

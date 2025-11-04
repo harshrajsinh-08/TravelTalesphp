@@ -5,7 +5,7 @@ require 'config/db.php';
 $page_title = "Contact Us - TravelTales";
 $userEmail = $_SESSION['user'] ?? null;
 
-// Handle form submission
+// Contact form ka submission handle karte hain
 $success = '';
 $error = '';
 
@@ -15,9 +15,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $message = trim($_POST['message'] ?? '');
 
     if ($name && $email && $message) {
-        $stmt = $pdo->prepare("INSERT INTO messages (name, email, message) VALUES (?, ?, ?)");
-        $stmt->execute([$name, $email, $message]);
-        $success = "Thank you for reaching out! We'll get back to you soon.";
+        $name = $conn->real_escape_string($name);
+        $email = $conn->real_escape_string($email);
+        $message = $conn->real_escape_string($message);
+        
+        $query = "INSERT INTO messages (name, email, message) VALUES ('$name', '$email', '$message')";
+        if ($conn->query($query)) {
+            $success = "Thank you for reaching out! We'll get back to you soon.";
+        } else {
+            $error = "There was an error sending your message. Please try again.";
+        }
     } else {
         $error = "Please fill out all fields.";
     }

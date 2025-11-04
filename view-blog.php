@@ -1,16 +1,17 @@
 <?php
 session_start();
 require 'config/db.php';
-// Fetch blog by ID
+// URL se blog ID fetch karte hain
 $blogId = $_GET['id'] ?? null;
 if (!$blogId) {
     header("Location: blogs.php");
     exit();
 }
 
-$stmt = $pdo->prepare("SELECT * FROM blogs WHERE id = ?");
-$stmt->execute([$blogId]);
-$blog = $stmt->fetch(PDO::FETCH_ASSOC);
+$blogId = $conn->real_escape_string($blogId);
+$query = "SELECT * FROM blogs WHERE id = '$blogId'";
+$result = $conn->query($query);
+$blog = $result ? $result->fetch_assoc() : null;
 
 if (!$blog) {
     header("Location: blogs.php");

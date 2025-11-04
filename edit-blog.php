@@ -2,7 +2,7 @@
 session_start();
 require 'config/db.php';
 
-// Check if user is logged in
+// Pehle check karte hain ki user login hai ya nahi
 if (!isset($_SESSION['user'])) {
     header("Location: templates/login.html");
     exit();
@@ -16,23 +16,24 @@ if (!$blogId) {
     exit();
 }
 
-// Get the blog
+// Blog ka data fetch karte hain database se
+$blogId = $conn->real_escape_string($blogId);
 $query = "SELECT * FROM blogs WHERE id = '$blogId'";
-$result = $pdo->query($query);
-$blog = $result->fetch(PDO::FETCH_ASSOC);
+$result = $conn->query($query);
+$blog = $result ? $result->fetch_assoc() : null;
 
 if (!$blog) {
     header("Location: blogs.php?error=blog_not_found");
     exit();
 }
 
-// Check if the current user is the author
+// Check karte hain ki yeh blog isi user ka hai ya nahi
 if ($blog['author'] !== $userEmail) {
     header("Location: blogs.php?error=not_authorized");
     exit();
 }
 
-// Handle form submission
+// Jab form submit hota hai toh yahan process karte hain
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'];
     $content = $_POST['content'];
@@ -66,8 +67,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Update the blog
+    $title = $conn->real_escape_string($title);
+    $content = $conn->real_escape_string($content);
+    $imagePath = $conn->real_escape_string($imagePath);
+    $userEmail = $conn->real_escape_string($userEmail);
+    
     $query = "UPDATE blogs SET title = '$title', content = '$content', image = '$imagePath' WHERE id = '$blogId' AND author = '$userEmail'";
-    $pdo->query($query);
+    $conn->query($query);
 
     header("Location: view-blog.php?id=$blogId&success=updated");
     exit();

@@ -2,48 +2,28 @@
 session_start();
 require 'config/db.php';
 
-// Redirect if user is not logged in
+// Agar user login nahi hai toh login page pe bhej do
 if (!isset($_SESSION['user'])) {
     header("Location: templates/login.html?error=login_required");
     exit();
 }
 
-
-
-// Handle blog submission
+// Jab form submit hota hai toh yahan process karte hain
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $title = $_POST['title'];
     $content = $_POST['content'];
     $author = $_SESSION['user'];
 
-    // Handle image upload
+    // Image upload ka simple process - zyada validation nahi hai
     $imagePath = null;
     if (!empty($_FILES['image']['name'])) {
-        if ($_FILES['image']['error'] !== UPLOAD_ERR_OK) {
-            header("Location: blogs.php?error=upload");
-            exit();
-        }
-        
         $targetDir = "uploads/";
         if (!is_dir($targetDir)) {
             mkdir($targetDir, 0755, true);
         }
         
-        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-        $extension = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
-        
-        if (!in_array($extension, $allowedExtensions)) {
-            header("Location: blogs.php?error=filetype");
-            exit();
-        }
-        
-        if ($_FILES['image']['size'] > 5 * 1024 * 1024) {
-            header("Location: blogs.php?error=filesize");
-            exit();
-        }
-        
-        $fileName = uniqid() . "_" . time() . "." . $extension;
+        $fileName = uniqid() . "_" . $_FILES['image']['name'];
         $targetFile = $targetDir . $fileName;
 
         if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
@@ -51,9 +31,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Insert into DB
-    $stmt = $pdo->prepare("INSERT INTO blogs (title, content, author, image, created_at) VALUES (?, ?, ?, ?, NOW())");
-    $stmt->execute([$title, $content, $author, $imagePath]);
+    // Database mein blog save karte hain - MySQLi use kar rahe hain
+    $title = $conn->real_escape_string($title);
+    $content = $conn->real_escape_string($content);
+    $author = $conn->real_escape_string($author);
+    $imagePath = $imagePath ? $conn->real_escape_string($imagePath) : 'NULL';
+    
+    $query = "INSERT INTO blogs (title, content, author, image, created_at) VALUES ('$title', '$content', '$author', " . ($imagePath === 'NULL' ? 'NULL' : "'$imagePath'") . ", NOW())";
+    $conn->query($query);
 
     header("Location: blogs.php?success=posted");
     exit();

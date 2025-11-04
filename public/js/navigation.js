@@ -1,6 +1,6 @@
-// Mobile menu toggle functionality
+// Mobile menu toggle aur navigation functionality
 document.addEventListener('DOMContentLoaded', () => {
-    // Check authentication on page load
+    // Page load hone pe authentication check karte hain
     const isLoggedIn = localStorage.getItem('isLoggedIn');
     const userEmail = localStorage.getItem('userEmail');
     
@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
     
-    // Display user email in navbar
+    // Navbar mein user email display karte hain
     if (userEmail) {
         const userEmailElement = document.getElementById('userEmail');
         if (userEmailElement) {
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Logout functionality
+    // Logout functionality - localStorage clear kar ke login page pe bhej dete hain
     function logout() {
         localStorage.removeItem('isLoggedIn');
         localStorage.removeItem('userEmail');
@@ -35,14 +35,14 @@ document.addEventListener('DOMContentLoaded', () => {
         mobileLogoutBtn.addEventListener('click', logout);
     }
 
-    // Mobile menu functionality
+    // Mobile menu functionality - toggle karne ke liye
     const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
 
     if (mobileMenuToggle && mobileMenu) {
         mobileMenuToggle.addEventListener('click', () => {
             if (mobileMenu.classList.contains("hidden")) {
-                // Show menu
+                // Menu show karte hain smooth animation ke saath
                 mobileMenu.classList.remove("hidden");
                 setTimeout(() => {
                     mobileMenu.classList.remove("opacity-0", "-translate-y-5");
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 10);
                 mobileMenuToggle.setAttribute('aria-expanded', 'true');
             } else {
-                // Hide menu
+                // Menu hide karte hain
                 mobileMenu.classList.remove("opacity-100", "translate-y-0");
                 mobileMenu.classList.add("opacity-0", "-translate-y-5");
                 setTimeout(() => {
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Close mobile menu when clicking outside
+        // Bahar click karne pe menu close kar dete hain
         document.addEventListener('click', (e) => {
             if (!mobileMenuToggle.contains(e.target) && !mobileMenu.contains(e.target)) {
                 if (!mobileMenu.classList.contains("hidden")) {
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Close mobile menu when clicking on a link
+        // Menu link pe click karne pe menu close kar dete hain
         const mobileMenuLinks = mobileMenu.querySelectorAll("a");
         mobileMenuLinks.forEach(link => {
             link.addEventListener("click", function() {

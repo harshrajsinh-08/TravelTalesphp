@@ -9,34 +9,43 @@ if (!isset($_SESSION['user'])) {
 
 $userEmail = $_SESSION['user'];
 
-// Handle trip creation
+// Naya trip add karne ka process
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_trip') {
-    $destination = $_POST['destination'];
-    $startDate = $_POST['start_date'];
-    $endDate = $_POST['end_date'];
-    $notes = $_POST['notes'] ?? '';
+    $destination = $conn->real_escape_string($_POST['destination']);
+    $startDate = $conn->real_escape_string($_POST['start_date']);
+    $endDate = $conn->real_escape_string($_POST['end_date']);
+    $notes = isset($_POST['notes']) ? $conn->real_escape_string($_POST['notes']) : '';
+    $userEmail = $conn->real_escape_string($userEmail);
 
-    $stmt = $pdo->prepare("INSERT INTO trips (user_email, destination, start_date, end_date, notes, created_at) VALUES (?, ?, ?, ?, ?, NOW())");
-    $stmt->execute([$userEmail, $destination, $startDate, $endDate, $notes]);
+    $query = "INSERT INTO trips (user_email, destination, start_date, end_date, notes, created_at) VALUES ('$userEmail', '$destination', '$startDate', '$endDate', '$notes', NOW())";
+    $conn->query($query);
     
     header("Location: trip-planner.php?success=1");
     exit();
 }
 
-// Handle trip deletion
+// Trip delete karne ka process
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete_trip') {
-    $tripId = $_POST['trip_id'];
-    $stmt = $pdo->prepare("DELETE FROM trips WHERE id = ? AND user_email = ?");
-    $stmt->execute([$tripId, $userEmail]);
+    $tripId = $conn->real_escape_string($_POST['trip_id']);
+    $userEmail = $conn->real_escape_string($userEmail);
+    
+    $query = "DELETE FROM trips WHERE id = '$tripId' AND user_email = '$userEmail'";
+    $conn->query($query);
     
     header("Location: trip-planner.php?deleted=1");
     exit();
 }
 
-// Fetch user trips
-$stmt = $pdo->prepare("SELECT * FROM trips WHERE user_email = ? ORDER BY start_date ASC");
-$stmt->execute([$userEmail]);
-$trips = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// User ke saare trips fetch karte hain
+$userEmail = $conn->real_escape_string($userEmail);
+$query = "SELECT * FROM trips WHERE user_email = '$userEmail' ORDER BY start_date ASC";
+$result = $conn->query($query);
+$trips = [];
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $trips[] = $row;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

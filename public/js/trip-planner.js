@@ -1,5 +1,6 @@
 let planMap;
 let planMarker;
+
 function handleSearch() {
   const searchInput = document.getElementById('searchInput');
   const destination = searchInput.value.trim();
@@ -9,14 +10,14 @@ function handleSearch() {
     return;
   }
 
-  // Scroll smoothly to the "Plan Your Trip" section
+  // "Plan Your Trip" section tak smooth scroll karte hain
   const planTripSection = document.getElementById('plan-trip');
   planTripSection.scrollIntoView({ behavior: 'smooth' });
 
-  // Set the value of the bottom input to the same destination
+  // Neeche wale input mein bhi same destination set kar dete hain
   document.getElementById('destinationInput').value = destination;
 
-  // Fetch the trip data and show map + card
+  // Trip data fetch karte hain aur map + card show karte hain
   fetchTripData();
 }
 function fetchTripData(cityName = null) {
@@ -30,13 +31,13 @@ function fetchTripData(cityName = null) {
     return;
   }
 
-  // Smooth scroll to Plan Trip section
+  // Plan Trip section tak smooth scroll karte hain
   document.getElementById('plan-trip').scrollIntoView({ behavior: 'smooth' });
 
-  // --- Show Map for the City ---
-  showPlanMap(destination); // This should initialize Leaflet map with the searched city
+  // City ke liye map show karte hain
+  showPlanMap(destination); // Leaflet map initialize karta hai searched city ke saath
 
-  // First, make the card hidden while loading
+  // Pehle card ko hidden kar dete hain loading ke time
   card.classList.add('hidden', 'opacity-0');
 
   fetch('api/fetchtrips.php?city=' + encodeURIComponent(destination))
@@ -53,7 +54,7 @@ function fetchTripData(cityName = null) {
         const cityName = destination.toUpperCase();
         html = `<div class="space-y-6">`;
 
-        // City Header
+        // City ka header banate hain
         html += `
           <div class="text-center">
             <h3 class="text-3xl font-bold text-gray-800 mb-2">${cityName}</h3>
@@ -61,7 +62,7 @@ function fetchTripData(cityName = null) {
           </div>
         `;
 
-        // City Image
+        // City ki image add karte hain agar available hai
         if (data.city_image) {
           html += `
             <img src="${data.city_image}" 
@@ -69,7 +70,7 @@ function fetchTripData(cityName = null) {
                  alt="${cityName}"/>`;
         }
 
-        // Travel Info
+        // Travel information display karte hain
         html += `
           <div class="bg-gray-50 p-4 rounded-lg shadow-sm space-y-2">
             <p class="text-gray-600"><strong>How to Reach:</strong> ${data.how_to_reach || 'Information not available'}</p>
@@ -78,7 +79,7 @@ function fetchTripData(cityName = null) {
           </div>
         `;
 
-        // Attractions List
+        // Attractions ki list banate hain
         html += `<ul class="space-y-3">`;
         data.attractions.forEach(a => {
           html += `
@@ -90,7 +91,7 @@ function fetchTripData(cityName = null) {
         html += `</ul></div>`;
       }
 
-      // --- Show the card after the map ---
+      // Map ke baad card show karte hain
       card.innerHTML = html;
       card.classList.remove('hidden');
       setTimeout(() => card.classList.remove('opacity-0'), 50);
@@ -105,6 +106,7 @@ function showPlanMap(city) {
   const mapDiv = document.getElementById("map");
   mapDiv.classList.remove("hidden");
 
+  // OpenStreetMap API se city ka location fetch karte hain
   fetch(
     `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
       city + ", India"
@@ -120,6 +122,7 @@ function showPlanMap(city) {
       const lat = parseFloat(data[0].lat);
       const lon = parseFloat(data[0].lon);
 
+      // Agar map pehle se nahi hai toh naya banate hain
       if (!planMap) {
         planMap = L.map("map").setView([lat, lon], 12);
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -129,6 +132,7 @@ function showPlanMap(city) {
         planMap.setView([lat, lon], 12);
       }
 
+      // Marker add karte hain ya update karte hain
       if (planMarker) {
         planMarker.setLatLng([lat, lon]);
       } else {

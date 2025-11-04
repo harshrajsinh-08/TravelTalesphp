@@ -11,15 +11,21 @@ if (!isset($_SESSION['user'])) {
 
 $userEmail = $_SESSION['user'];
 
-// Fetch user details
-$stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
-$stmt->execute([$userEmail]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+// User ka profile data fetch karte hain
+$userEmail = $conn->real_escape_string($userEmail);
+$query = "SELECT * FROM users WHERE email = '$userEmail'";
+$result = $conn->query($query);
+$user = $result ? $result->fetch_assoc() : null;
 
-// Fetch user trips
-$stmt = $pdo->prepare("SELECT * FROM trips WHERE user_email = ? ORDER BY start_date ASC");
-$stmt->execute([$userEmail]);
-$trips = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// User ke saare trips fetch karte hain
+$query = "SELECT * FROM trips WHERE user_email = '$userEmail' ORDER BY start_date ASC";
+$result = $conn->query($query);
+$trips = [];
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $trips[] = $row;
+    }
+}
 
 include 'includes/header.php';
 ?>

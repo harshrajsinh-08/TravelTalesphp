@@ -75,14 +75,6 @@ $userEmail = $_SESSION['user'];
         <i class="bi bi-search"></i>
         Search Weather
       </button>
-      <button 
-        onclick="getWeatherByLocation()" 
-        class="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-full flex items-center justify-center gap-2"
-        id="locationBtn"
-      >
-        <i class="bi bi-geo-alt"></i>
-        My Location
-      </button>
 
     </div>
   </div>
@@ -136,91 +128,7 @@ $userEmail = $_SESSION['user'];
   </div>
 </section>
 
-<!-- Popular Cities Weather -->
-<section class="container mx-auto px-4 py-12">
-  <div class="max-w-6xl mx-auto">
-    <h2 class="text-3xl font-bold mb-8 text-center">Popular Indian Cities</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div class="weather-card cursor-pointer" onclick="searchWeatherByCity('Mumbai')">
-        <div class="flex items-center justify-between">
-          <div>
-            <h3 class="text-xl font-bold">Mumbai</h3>
-            <p class="text-gray-600">Maharashtra</p>
-          </div>
-          <div class="text-right">
-            <p id="mumbai-temp" class="text-2xl font-bold">--°C</p>
-            <p id="mumbai-desc" class="text-sm text-gray-600">Loading...</p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="weather-card cursor-pointer" onclick="searchWeatherByCity('Delhi')">
-        <div class="flex items-center justify-between">
-          <div>
-            <h3 class="text-xl font-bold">Delhi</h3>
-            <p class="text-gray-600">National Capital Territory</p>
-          </div>
-          <div class="text-right">
-            <p id="delhi-temp" class="text-2xl font-bold">--°C</p>
-            <p id="delhi-desc" class="text-sm text-gray-600">Loading...</p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="weather-card cursor-pointer" onclick="searchWeatherByCity('Bangalore')">
-        <div class="flex items-center justify-between">
-          <div>
-            <h3 class="text-xl font-bold">Bangalore</h3>
-            <p class="text-gray-600">Karnataka</p>
-          </div>
-          <div class="text-right">
-            <p id="bangalore-temp" class="text-2xl font-bold">--°C</p>
-            <p id="bangalore-desc" class="text-sm text-gray-600">Loading...</p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="weather-card cursor-pointer" onclick="searchWeatherByCity('Chennai')">
-        <div class="flex items-center justify-between">
-          <div>
-            <h3 class="text-xl font-bold">Chennai</h3>
-            <p class="text-gray-600">Tamil Nadu</p>
-          </div>
-          <div class="text-right">
-            <p id="chennai-temp" class="text-2xl font-bold">--°C</p>
-            <p id="chennai-desc" class="text-sm text-gray-600">Loading...</p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="weather-card cursor-pointer" onclick="searchWeatherByCity('Kolkata')">
-        <div class="flex items-center justify-between">
-          <div>
-            <h3 class="text-xl font-bold">Kolkata</h3>
-            <p class="text-gray-600">West Bengal</p>
-          </div>
-          <div class="text-right">
-            <p id="kolkata-temp" class="text-2xl font-bold">--°C</p>
-            <p id="kolkata-desc" class="text-sm text-gray-600">Loading...</p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="weather-card cursor-pointer" onclick="searchWeatherByCity('Hyderabad')">
-        <div class="flex items-center justify-between">
-          <div>
-            <h3 class="text-xl font-bold">Hyderabad</h3>
-            <p class="text-gray-600">Telangana</p>
-          </div>
-          <div class="text-right">
-            <p id="hyderabad-temp" class="text-2xl font-bold">--°C</p>
-            <p id="hyderabad-desc" class="text-sm text-gray-600">Loading...</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+
 
 <!-- Loading Modal -->
 <div id="loadingModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">

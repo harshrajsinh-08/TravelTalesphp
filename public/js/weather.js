@@ -1,23 +1,12 @@
-// Weather API configuration
-const WEATHER_API_KEY = "0803af3c4dd129fe61e0256095fc930f"; // Replace with actual API key
+// Weather API ki configuration
+const WEATHER_API_KEY = "0803af3c4dd129fe61e0256095fc930f"; // Yahan apni actual API key daal dena
 const WEATHER_API_BASE = "https://api.openweathermap.org/data/2.5";
 
-// Popular Indian cities for quick weather display
-const popularCities = [
-  "Mumbai",
-  "Delhi",
-  "Bangalore",
-  "Chennai",
-  "Kolkata",
-  "Hyderabad",
-];
 
-// Initialize weather page
+
+// Weather page initialize karte hain
 document.addEventListener("DOMContentLoaded", function () {
-  // Load popular cities weather on page load
-  loadPopularCitiesWeather();
-
-  // Add enter key listener to city input
+  // City input mein enter key listener add karte hain
   document
     .getElementById("cityInput")
     .addEventListener("keypress", function (e) {
@@ -25,48 +14,32 @@ document.addEventListener("DOMContentLoaded", function () {
         searchWeather();
       }
     });
-
-  // Add input listener for city suggestions
-  document
-    .getElementById("cityInput")
-    .addEventListener("input", debounce(showCitySuggestions, 300));
 });
 
-// Debounce function to limit API calls
-function debounce(func, wait) {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
-}
 
-// Show loading modal
+
+// Loading modal show karte hain
 function showLoading() {
   document.getElementById("loadingModal").classList.remove("hidden");
 }
 
-// Hide loading modal
+// Loading modal hide karte hain
 function hideLoading() {
   document.getElementById("loadingModal").classList.add("hidden");
 }
 
-// Show error modal
+// Error modal show karte hain
 function showError(message) {
   document.getElementById("errorMessage").textContent = message;
   document.getElementById("errorModal").classList.remove("hidden");
 }
 
-// Close error modal
+// Error modal close karte hain
 function closeErrorModal() {
   document.getElementById("errorModal").classList.add("hidden");
 }
 
-// Search weather for entered city
+// User ke enter kiye gaye city ka weather search karte hain
 async function searchWeather() {
   const cityInput = document.getElementById("cityInput");
   const city = cityInput.value.trim();
@@ -79,106 +52,18 @@ async function searchWeather() {
   await getWeatherData(city);
 }
 
-// Search weather by city name (for popular cities)
-async function searchWeatherByCity(cityName) {
-  document.getElementById("cityInput").value = cityName;
-  await getWeatherData(cityName);
-}
-
-// Get weather by coordinates (for location-based weather)
-async function getWeatherByLocation() {
-  if (!navigator.geolocation) {
-    showError("Geolocation is not supported by this browser.");
-    return;
-  }
-
-  showLoading();
-
-  navigator.geolocation.getCurrentPosition(
-    async (position) => {
-      try {
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
-
-        // Fetch current weather by coordinates
-        const currentResponse = await fetch(`/api/weather.php?action=current_coords&lat=${lat}&lon=${lon}`);
-        if (!currentResponse.ok) {
-          throw new Error('Failed to fetch current weather');
-        }
-        const currentWeatherData = await currentResponse.json();
-
-        if (currentWeatherData.error) {
-          throw new Error(currentWeatherData.message);
-        }
-
-        // Update city input with the location name
-        document.getElementById("cityInput").value = currentWeatherData.name;
-
-        // Fetch forecast using the city name
-        const forecastResponse = await fetch(`/api/weather.php?action=forecast&city=${encodeURIComponent(currentWeatherData.name)}`);
-        if (!forecastResponse.ok) {
-          throw new Error('Failed to fetch weather forecast');
-        }
-        const forecastData = await forecastResponse.json();
-
-        if (forecastData.error) {
-          throw new Error(forecastData.message);
-        }
-
-        displayCurrentWeather(currentWeatherData);
-        displayForecast(forecastData);
-
-        hideLoading();
-
-        // Show weather sections
-        document.getElementById("currentWeatherSection").classList.remove("hidden");
-        document.getElementById("forecastSection").classList.remove("hidden");
-
-        // Scroll to weather section
-        document.getElementById("currentWeatherSection").scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      } catch (error) {
-        hideLoading();
-        showError("Failed to fetch weather data for your location. Please try again.");
-        console.error("Location Weather API Error:", error);
-      }
-    },
-    (error) => {
-      hideLoading();
-      let errorMessage = "Unable to retrieve your location. ";
-      switch (error.code) {
-        case error.PERMISSION_DENIED:
-          errorMessage += "Please allow location access and try again.";
-          break;
-        case error.POSITION_UNAVAILABLE:
-          errorMessage += "Location information is unavailable.";
-          break;
-        case error.TIMEOUT:
-          errorMessage += "Location request timed out.";
-          break;
-        default:
-          errorMessage += "An unknown error occurred.";
-          break;
-      }
-      showError(errorMessage);
-    },
-    {
-      timeout: 10000,
-      enableHighAccuracy: true
-    }
-  );
-}
 
 
 
-// Get weather data by city name
+
+
+
+// City name se weather data fetch karte hain
 async function getWeatherData(city) {
   showLoading();
 
   try {
-    // Fetch current weather
+    // Current weather fetch karte hain
     const currentResponse = await fetch(`/api/weather.php?action=current&city=${encodeURIComponent(city)}`);
     if (!currentResponse.ok) {
       throw new Error('Failed to fetch current weather');
@@ -189,7 +74,7 @@ async function getWeatherData(city) {
       throw new Error(currentWeatherData.message);
     }
 
-    // Fetch forecast
+    // Weather forecast fetch karte hain
     const forecastResponse = await fetch(`/api/weather.php?action=forecast&city=${encodeURIComponent(city)}`);
     if (!forecastResponse.ok) {
       throw new Error('Failed to fetch weather forecast');
@@ -205,11 +90,11 @@ async function getWeatherData(city) {
 
     hideLoading();
 
-    // Show weather sections
+    // Weather sections show karte hain
     document.getElementById("currentWeatherSection").classList.remove("hidden");
     document.getElementById("forecastSection").classList.remove("hidden");
 
-    // Scroll to weather section
+    // Weather section tak scroll karte hain
     document.getElementById("currentWeatherSection").scrollIntoView({
       behavior: "smooth",
       block: "start",
@@ -223,7 +108,7 @@ async function getWeatherData(city) {
 
 
 
-// Display current weather
+// Current weather display karte hain
 function displayCurrentWeather(data) {
   const currentWeatherCard = document.getElementById("currentWeatherCard");
 
@@ -268,7 +153,7 @@ function displayCurrentWeather(data) {
         </div>
     `;
 
-  // Update detail cards
+  // Detail cards update karte hain
   document.getElementById("feelsLike").textContent = `${Math.round(
     data.main.feels_like
   )}°C`;
@@ -281,12 +166,12 @@ function displayCurrentWeather(data) {
   ).toFixed(1)} km`;
 }
 
-// Display 5-day forecast
+// 5-day forecast display karte hain
 function displayForecast(data) {
   const forecastContainer = document.getElementById("forecastContainer");
   forecastContainer.innerHTML = "";
 
-  // Group forecast by day (take one forecast per day)
+  // Forecast ko day wise group karte hain (har din ka ek forecast lete hain)
   const dailyForecasts = [];
   const processedDates = new Set();
 
@@ -324,107 +209,11 @@ function displayForecast(data) {
   });
 }
 
-// Load weather for popular cities
-async function loadPopularCitiesWeather() {
-  for (const city of popularCities) {
-    try {
-      const response = await fetch(`/api/weather.php?action=current&city=${encodeURIComponent(city)}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch weather');
-      }
-      
-      const weatherData = await response.json();
-      if (weatherData.error) {
-        throw new Error(weatherData.message);
-      }
 
-      const cityId = city.toLowerCase();
-      const tempElement = document.getElementById(`${cityId}-temp`);
-      const descElement = document.getElementById(`${cityId}-desc`);
-      
-      if (tempElement && descElement) {
-        tempElement.textContent = `${Math.round(weatherData.main.temp)}°C`;
-        descElement.textContent = weatherData.weather[0].description;
-      }
-    } catch (error) {
-      console.error(`Failed to load weather for ${city}:`, error);
-      // Fallback to show placeholder text
-      const cityId = city.toLowerCase();
-      const tempElement = document.getElementById(`${cityId}-temp`);
-      const descElement = document.getElementById(`${cityId}-desc`);
-      
-      if (tempElement && descElement) {
-        tempElement.textContent = '--°C';
-        descElement.textContent = 'Unable to load';
-      }
-    }
-  }
-}
 
-// Show city suggestions (mock implementation)
-function showCitySuggestions() {
-  const input = document.getElementById("cityInput");
-  const query = input.value.trim().toLowerCase();
-  const resultsContainer = document.getElementById("citySearchResults");
 
-  if (query.length < 2) {
-    resultsContainer.classList.add("hidden");
-    return;
-  }
 
-  // Mock Indian cities for suggestions
-  const indianCities = [
-    "Mumbai",
-    "Delhi",
-    "Bangalore",
-    "Chennai",
-    "Kolkata",
-    "Hyderabad",
-    "Pune",
-    "Ahmedabad",
-    "Jaipur",
-    "Surat",
-    "Lucknow",
-    "Kanpur",
-    "Nagpur",
-    "Indore",
-    "Thane",
-    "Bhopal",
-    "Visakhapatnam",
-    "Pimpri-Chinchwad",
-    "Patna",
-    "Vadodara",
-    "Ghaziabad",
-    "Ludhiana",
-    "Agra",
-    "Nashik",
-  ];
-
-  const suggestions = indianCities
-    .filter((city) => city.toLowerCase().includes(query))
-    .slice(0, 5);
-
-  if (suggestions.length > 0) {
-    resultsContainer.innerHTML = suggestions
-      .map(
-        (city) =>
-          `<div class="px-4 py-2 hover:bg-gray-100 cursor-pointer" onclick="selectCity('${city}')">${city}</div>`
-      )
-      .join("");
-    resultsContainer.classList.remove("hidden");
-  } else {
-    resultsContainer.classList.add("hidden");
-  }
-}
-
-// Select city from suggestions
-function selectCity(city) {
-  document.getElementById("cityInput").value = city;
-  document.getElementById("citySearchResults").classList.add("hidden");
-  searchWeatherByCity(city);
-}
-
-// Get weather icon based on weather condition
+// Weather condition ke hisaab se icon return karte hain
 function getWeatherIcon(condition) {
   const icons = {
     Clear: "☀️",
@@ -442,13 +231,3 @@ function getWeatherIcon(condition) {
 }
 
 
-
-// Hide city suggestions when clicking outside
-document.addEventListener("click", function (e) {
-  const cityInput = document.getElementById("cityInput");
-  const resultsContainer = document.getElementById("citySearchResults");
-
-  if (!cityInput.contains(e.target) && !resultsContainer.contains(e.target)) {
-    resultsContainer.classList.add("hidden");
-  }
-});

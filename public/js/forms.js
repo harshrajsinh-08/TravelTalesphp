@@ -1,4 +1,4 @@
-// Form validation and submission handling
+// Form validation aur submission handle karne ke liye
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('contactForm');
     if (!form) return;
@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const spinner = form.querySelector('.loading-spinner');
     const submitText = form.querySelector('button[type="submit"] span');
 
-    // Input validation functions
+    // Input validation ke functions - har field ke liye alag rules
     const validators = {
         name: (value) => {
             if (value.length < 2) return 'Name must be at least 2 characters long';
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Real-time validation
+    // Real-time validation - jaise hi user type kare, check karte rehte hain
     Object.keys(validators).forEach(field => {
         const input = document.getElementById(field);
         const errorDiv = document.getElementById(`${field}Error`);
@@ -43,11 +43,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Form submission
+    // Form submission handle karte hain
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        // Check all validations before submitting
+        // Submit karne se pehle saari validations check karte hain
         let hasErrors = false;
         Object.keys(validators).forEach(field => {
             const input = document.getElementById(field);
@@ -64,13 +64,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (hasErrors) return;
 
-        // Show loading state
+        // Loading state show karte hain
         const submitButton = form.querySelector('button[type="submit"]');
         submitButton.disabled = true;
         spinner.classList.remove('hidden');
         submitText.textContent = 'Sending...';
 
-        // Add CSRF token
+        // CSRF token add karte hain security ke liye
         const formData = new FormData(form);
         formData.append('_csrf', Math.random().toString(36).substring(2));
 

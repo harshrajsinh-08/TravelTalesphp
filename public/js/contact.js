@@ -8,13 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData(e.target);
         const submitButton = e.target.querySelector('button[type="submit"]');
         
-        // Disable submit button and show loading state
+        // Submit button disable kar dete hain aur loading state show karte hain
         submitButton.disabled = true;
         submitButton.innerHTML = 'Sending...';
         
         try {
-            // Since we're using PHP backend, submit the form normally
-            // This JavaScript is for enhanced UX but form will work without it
+            // PHP backend use kar rahe hain, toh form normally submit karte hain
+            // Yeh JavaScript sirf better UX ke liye hai, form bina bhi kaam karega
             const response = await fetch(window.location.href, {
                 method: 'POST',
                 body: formData
@@ -29,10 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error('Failed to send message');
             }
         } catch (error) {
-            // Fallback to normal form submission
+            // Agar koi problem hai toh normal form submission kar dete hain
             e.target.submit();
         } finally {
-            // Re-enable submit button
+            // Submit button wapas enable kar dete hain
             submitButton.disabled = false;
             submitButton.innerHTML = 'Send Message';
         }

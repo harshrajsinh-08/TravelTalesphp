@@ -5,9 +5,15 @@ require 'config/db.php';
 $page_title = "Explore India - TravelTales";
 $userEmail = $_SESSION['user'] ?? null;
 
-// Fetch popular destinations
-$stmt = $pdo->query("SELECT DISTINCT city FROM attractions ORDER BY city LIMIT 12");
-$destinations = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Popular destinations fetch karte hain database se
+$query = "SELECT DISTINCT city FROM attractions ORDER BY city LIMIT 12";
+$result = $conn->query($query);
+$destinations = [];
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $destinations[] = $row;
+    }
+}
 ?>
 
 <?php include 'includes/header.php'; ?>

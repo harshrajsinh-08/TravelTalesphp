@@ -55,16 +55,7 @@ function getCurrentWeatherByCity($city) {
     return fetchWeatherData($url);
 }
 
-function getCurrentWeatherByCoords($lat, $lon) {
-    $url = OPENWEATHER_BASE_URL . '/weather?' . http_build_query([
-        'lat' => $lat,
-        'lon' => $lon,
-        'appid' => OPENWEATHER_API_KEY,
-        'units' => 'metric'
-    ]);
-    
-    return fetchWeatherData($url);
-}
+
 
 function getForecastByCity($city) {
     $url = OPENWEATHER_BASE_URL . '/forecast?' . http_build_query([
@@ -94,13 +85,7 @@ try {
             echo json_encode($forecastData);
             break;
             
-        case 'current_coords':
-            if (empty($lat) || empty($lon)) {
-                throw new Exception('Latitude and longitude parameters are required');
-            }
-            $weatherData = getCurrentWeatherByCoords($lat, $lon);
-            echo json_encode($weatherData);
-            break;
+
             
         case 'cities':
             // Return popular Indian cities
