@@ -28,13 +28,7 @@ $userEmail = $_SESSION['user'];
     width: 80px;
     height: 80px;
   }
-  .forecast-card {
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    padding: 1rem;
-    text-align: center;
-  }
+
   .weather-detail {
     @apply flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0;
   }
@@ -116,17 +110,7 @@ $userEmail = $_SESSION['user'];
   </div>
 </section>
 
-<!-- 5-Day Forecast Section -->
-<section id="forecastSection" class="bg-gray-100 py-12 hidden">
-  <div class="container mx-auto px-4">
-    <div class="max-w-6xl mx-auto">
-      <h2 class="text-3xl font-bold mb-8 text-center">5-Day Forecast</h2>
-      <div id="forecastContainer" class="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <!-- Forecast cards will be populated by JavaScript -->
-      </div>
-    </div>
-  </div>
-</section>
+
 
 
 

@@ -9,7 +9,7 @@ if (empty($_POST['name']) || empty($_POST['email']) || empty($_POST['password'])
 
 $name = $conn->real_escape_string(trim($_POST['name']));
 $email = $conn->real_escape_string(trim($_POST['email']));
-$password = $conn->real_escape_string($_POST['password']); // Plain text password - student project hai
+$password = $conn->real_escape_string($_POST['password']);
 
 // Pehle check karte hain ki yeh email already registered hai ya nahi
 $checkQuery = "SELECT * FROM users WHERE email = '$email'";

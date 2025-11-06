@@ -18,7 +18,7 @@ $blogId = $_POST['blog_id'];
 $userEmail = $_SESSION['user'];
 
 // Pehle blog ka data fetch karte hain - ownership check karne ke liye
-$blogId = $conn->real_escape_string($blogId);
+$blogId = $conn->real_escape_string(string: $blogId);
 $query = "SELECT * FROM blogs WHERE id = '$blogId'";
 $result = $conn->query($query);
 $blog = $result ? $result->fetch_assoc() : null;

@@ -57,15 +57,7 @@ function getCurrentWeatherByCity($city) {
 
 
 
-function getForecastByCity($city) {
-    $url = OPENWEATHER_BASE_URL . '/forecast?' . http_build_query([
-        'q' => $city,
-        'appid' => OPENWEATHER_API_KEY,
-        'units' => 'metric'
-    ]);
-    
-    return fetchWeatherData($url);
-}
+
 
 try {
     switch ($action) {
@@ -77,13 +69,7 @@ try {
             echo json_encode($weatherData);
             break;
             
-        case 'forecast':
-            if (empty($city)) {
-                throw new Exception('City parameter is required');
-            }
-            $forecastData = getForecastByCity($city);
-            echo json_encode($forecastData);
-            break;
+
             
 
             

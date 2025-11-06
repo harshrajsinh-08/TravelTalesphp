@@ -74,25 +74,12 @@ async function getWeatherData(city) {
       throw new Error(currentWeatherData.message);
     }
 
-    // Weather forecast fetch karte hain
-    const forecastResponse = await fetch(`/api/weather.php?action=forecast&city=${encodeURIComponent(city)}`);
-    if (!forecastResponse.ok) {
-      throw new Error('Failed to fetch weather forecast');
-    }
-    const forecastData = await forecastResponse.json();
-
-    if (forecastData.error) {
-      throw new Error(forecastData.message);
-    }
-
     displayCurrentWeather(currentWeatherData);
-    displayForecast(forecastData);
 
     hideLoading();
 
-    // Weather sections show karte hain
+    // Weather section show karte hain
     document.getElementById("currentWeatherSection").classList.remove("hidden");
-    document.getElementById("forecastSection").classList.remove("hidden");
 
     // Weather section tak scroll karte hain
     document.getElementById("currentWeatherSection").scrollIntoView({
@@ -166,48 +153,7 @@ function displayCurrentWeather(data) {
   ).toFixed(1)} km`;
 }
 
-// 5-day forecast display karte hain
-function displayForecast(data) {
-  const forecastContainer = document.getElementById("forecastContainer");
-  forecastContainer.innerHTML = "";
 
-  // Forecast ko day wise group karte hain (har din ka ek forecast lete hain)
-  const dailyForecasts = [];
-  const processedDates = new Set();
-
-  data.list.forEach((item) => {
-    const date = new Date(item.dt * 1000).toDateString();
-    if (!processedDates.has(date) && dailyForecasts.length < 5) {
-      dailyForecasts.push(item);
-      processedDates.add(date);
-    }
-  });
-
-  dailyForecasts.forEach((forecast, index) => {
-    const date = new Date(forecast.dt * 1000);
-    const dayName =
-      index === 0
-        ? "Today"
-        : date.toLocaleDateString("en-US", { weekday: "short" });
-    const weatherIcon = getWeatherIcon(forecast.weather[0].main);
-    const temp = Math.round(forecast.main.temp);
-    const description = forecast.weather[0].description;
-
-    const forecastCard = document.createElement("div");
-    forecastCard.className = "forecast-card";
-    forecastCard.innerHTML = `
-            <h4 class="font-semibold text-gray-800 mb-2">${dayName}</h4>
-            <div class="text-4xl mb-2">${weatherIcon}</div>
-            <p class="text-2xl font-bold text-gray-800 mb-1">${temp}°C</p>
-            <p class="text-sm text-gray-600 capitalize">${description}</p>
-            <div class="mt-2 text-xs text-gray-500">
-                <p>Humidity: ${forecast.main.humidity}%</p>
-            </div>
-        `;
-
-    forecastContainer.appendChild(forecastCard);
-  });
-}
 
 
 

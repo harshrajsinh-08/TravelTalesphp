@@ -38,8 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'];
     $content = $_POST['content'];
     
-    // Handle image upload
-    $imagePath = $blog['image']; // Keep existing image by default
+    // image upload handle kar rahe hai 
+    $imagePath = $blog['image']; // existing image default hai 
     
     if (!empty($_FILES['image']['name'])) {
         $targetDir = "uploads/";

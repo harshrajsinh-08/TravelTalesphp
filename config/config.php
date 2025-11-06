@@ -1,5 +1,4 @@
 <?php
-// TravelTales Configuration - Student Project ke liye simplified
 
 // Database ki settings - yahan apne local setup ke hisaab se change karo
 define('DB_HOST', 'localhost');
