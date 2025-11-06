@@ -83,7 +83,7 @@ include 'includes/header.php';
                             <?php foreach ($trips as $trip): ?>
                                 <li>
                                     <?= htmlspecialchars($trip['destination']) ?>
-                                    (<?= date('F j, Y', strtotime($trip['start_date'])) ?>)
+                                    (<?= date('j F, Y', strtotime($trip['start_date'])) ?>)
                                 </li>
                             <?php endforeach; ?>
                         <?php else: ?>

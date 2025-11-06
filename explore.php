@@ -37,7 +37,7 @@ if ($result && $result->num_rows > 0) {
   <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
     <?php if ($destinations): ?>
       <?php 
-      // City to image mapping for Indian destinations
+      // City --> image mapping 
       $cityImages = [
         'Mumbai' => 'https://images.unsplash.com/photo-1595658658481-d53d3f999875?w=400&h=300&fit=crop',
         'Delhi' => 'https://images.unsplash.com/photo-1587474260584-136574528ed5?w=400&h=300&fit=crop',
@@ -65,7 +65,7 @@ if ($result && $result->num_rows > 0) {
         'Darjeeling' => 'https://images.unsplash.com/photo-1637737118663-f1a53ee1d5a7?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZGFyamVlbGluZ3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=900'
       ];
       
-      // Default fallback image for cities not in the mapping
+      // agar koi image nahi to default image
       $defaultImage = 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=400&h=300&fit=crop';
       ?>
       

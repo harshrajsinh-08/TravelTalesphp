@@ -83,7 +83,7 @@ include 'includes/navbar.php';
               By <?= htmlspecialchars($blog['author']) ?> • <?= date('F j, Y', strtotime($blog['created_at'])) ?>
             </p>
             <p class="text-gray-600 mb-4 line-clamp-3">
-              <?= htmlspecialchars(substr($blog['content'], 0, 120)) ?>...
+              <?= htmlspecialchars(string: substr($blog['content'], 0, 120)) ?>...
             </p>
             <div class="flex justify-between items-center">
               <a href="view-blog.php?id=<?= $blog['id'] ?>" 

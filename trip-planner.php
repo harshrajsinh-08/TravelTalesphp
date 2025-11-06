@@ -88,6 +88,24 @@ if ($result && $result->num_rows > 0) {
         <i class="bi bi-list text-2xl"></i>
       </button>
     </div>
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t opacity-0 -translate-y-5 transition-all duration-200">
+      <div class="px-4 py-4 space-y-3">
+        <a href="explore.php" class="block py-2 text-gray-700 hover:text-orange-500 transition">Explore</a>
+        <a href="blogs.php" class="block py-2 text-gray-700 hover:text-orange-500 transition">Blog</a>
+        <a href="trip-planner.php" class="block py-2 text-orange-500 font-semibold">My Trips</a>
+        <a href="profile.php" class="block py-2 text-gray-700 hover:text-orange-500 transition">Profile</a>
+        <a href="about.php" class="block py-2 text-gray-700 hover:text-orange-500 transition">About</a>
+        <a href="contact.php" class="block py-2 text-gray-700 hover:text-orange-500 transition">Contact</a>
+        <div class="pt-3 border-t">
+          <span class="block text-sm text-gray-600 mb-2"><?= htmlspecialchars($userEmail) ?></span>
+          <a href="logout.php" class="block bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm text-center transition">
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 </nav>
 
@@ -189,7 +207,7 @@ if ($result && $result->num_rows > 0) {
   </div>
 </section>
 
-<script src="navbar.js"></script>
+<script src="public/js/navigation.js"></script>
 
 </body>
 </html>

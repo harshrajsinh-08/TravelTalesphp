@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $badgesArray = array_filter(array_map('trim', explode(',', $badgesInput)));
     $badgesString = implode(',', $badgesArray);
 
-    // Simple profile picture upload for student project
+    // Simple profile picture upload
     $profilePic = $user['profile_pic'] ?? 'default.jpg';
     if (!empty($_FILES['profile_pic']['name'])) {
         $targetDir = "uploads/";
@@ -192,7 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </form>
 </section>
 
-<script src="navbar.js"></script>
+<script src="navigation.js"></script>
 
 </body>
 </html>

@@ -95,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <!-- Back Button -->
   <div class="mb-6 text-left">
-    <a href="view-blog.php?id=<?= $blogId ?>" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg text-sm transition">
+    <a href="view-blog.php" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg text-sm transition">
       ← Back to Blog
     </a>
   </div>

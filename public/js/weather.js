@@ -73,6 +73,10 @@ async function getWeatherData(city) {
     
     const weatherData = await response.json();
 
+    // Console mein complete weather data object dikhate hain
+    console.log('Weather API Response:', weatherData);
+    // console.log('Weather Data Object:', JSON.stringify(weatherData, null, 2));
+
     if (weatherData.cod !== 200) {
       throw new Error(weatherData.message || 'Weather data not found');
     }
@@ -151,9 +155,12 @@ function displayCurrentWeather(data) {
   document.getElementById("windSpeed").textContent = `${Math.round(
     data.wind.speed * 3.6
   )} km/h`;
-  document.getElementById("visibility").textContent = `${(
-    data.visibility / 1000
-  ).toFixed(1)} km`;
+  // Visibility ko format karte hain - agar 9999m se zyada hai to km mein show karte hain
+  const visibilityValue = data.visibility;
+  const visibilityText = visibilityValue > 9999 
+    ? `${(visibilityValue / 1000).toFixed(1)} km`
+    : `${visibilityValue} m`;
+  document.getElementById("visibility").textContent = visibilityText;
 }
 
 

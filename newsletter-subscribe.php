@@ -19,26 +19,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (empty($email) || !strpos($email, '@')) {
             throw new Exception('Please enter a valid email address');
         }
-        
-        // Newsletter table banate hain agar exist nahi karta
-        $createTableSQL = "
-            CREATE TABLE IF NOT EXISTS newsletter_subscribers (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                email VARCHAR(255) UNIQUE NOT NULL,
-                subscribed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                is_active BOOLEAN DEFAULT TRUE,
-                INDEX idx_email (email),
-                INDEX idx_subscribed_at (subscribed_at)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-        ";
-        
-        $conn->query($createTableSQL);
+    
         
         // Check if email already exists
         $email = $conn->real_escape_string($email);
         $checkQuery = "SELECT id, is_active FROM newsletter_subscribers WHERE email = '$email'";
         $result = $conn->query($checkQuery);
-        $existing = $result ? $result->fetch_assoc() : null;
+        
+        if (!$result) {
+            throw new Exception('Database error occurred. Please try again later.');
+        }
+        
+        $existing = $result->fetch_assoc();
         
         if ($existing) {
             if ($existing['is_active']) {
@@ -47,7 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 // Reactivate subscription
                 $updateQuery = "UPDATE newsletter_subscribers SET is_active = TRUE, subscribed_at = CURRENT_TIMESTAMP WHERE email = '$email'";
-                $conn->query($updateQuery);
+                if (!$conn->query($updateQuery)) {
+                    throw new Exception('Database error occurred. Please try again later.');
+                }
                 
                 $message = 'Welcome back! Your subscription has been reactivated.';
                 $messageType = 'success';
@@ -55,21 +49,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             // Insert new subscription
             $insertQuery = "INSERT INTO newsletter_subscribers (email) VALUES ('$email')";
-            $conn->query($insertQuery);
-            
-            $message = 'Thank you for subscribing! You\'ll receive our latest travel updates.';
-            $messageType = 'success';
+            if (!$conn->query($insertQuery)) {
+                // Check if it's a duplicate entry error
+                if ($conn->errno == 1062) {
+                    $message = 'This email is already subscribed to our newsletter';
+                    $messageType = 'info';
+                } else {
+                    throw new Exception('Database error occurred. Please try again later.');
+                }
+            } else {
+                $message = 'Thank you for subscribing! You\'ll receive our latest travel updates.';
+                $messageType = 'success';
+            }
         }
-        
-    } catch (PDOException $e) {
-        if ($e->getCode() == 23000) { // Duplicate entry
-            $message = 'This email is already subscribed to our newsletter';
-            $messageType = 'info';
-        } else {
-            $message = 'Database error occurred. Please try again later.';
-            $messageType = 'error';
-        }
-        error_log("Newsletter subscription database error: " . $e->getMessage());
         
     } catch (Exception $e) {
         $message = $e->getMessage();
@@ -92,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!-- Hero Section -->
 <header class="hero-section relative flex items-center justify-center">
-  <div class="absolute inset-0 bg-black/20"></div>
+  <div class="absolute inset-0 shadow-md p-8" ></div>
   <div class="relative text-center text-white px-4">
     <h1 class="text-4xl md:text-5xl font-bold mb-4">Newsletter Subscription</h1>
     <p class="text-xl opacity-90">Stay updated with the latest travel stories and tips</p>

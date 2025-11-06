@@ -81,7 +81,7 @@ $userEmail = $_SESSION['user'];
     
     <!-- Main Weather Card -->
     <div id="currentWeatherCard" class="weather-card mb-8">
-      <!-- Content will be populated by JavaScript -->
+      <!-- Content by wearther.js -->
     </div>
 
     <!-- Weather Details Grid -->
@@ -104,7 +104,7 @@ $userEmail = $_SESSION['user'];
       <div class="weather-card text-center">
         <i class="bi bi-eye text-3xl text-purple-500 mb-2"></i>
         <h3 class="font-semibold text-gray-700">Visibility</h3>
-        <p id="visibility" class="text-2xl font-bold text-gray-800">-- km</p>
+        <p id="visibility" class="text-2xl font-bold text-gray-800">--m</p>
       </div>
     </div>
   </div>

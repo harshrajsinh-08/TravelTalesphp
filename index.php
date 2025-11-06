@@ -97,7 +97,7 @@ if (is_string($userBadges)) {
             <div class="p-6">
               <h3 class="font-bold text-xl mb-2">${story.title}</h3>
               <p class="text-gray-600">${story.summary}</p>
-              <a href="story.php?id=${story.id}" class="text-orange-500 font-semibold hover:underline mt-3 inline-block">Read More →</a>
+              <a href="story.php?id=${story.id}" class="text-orange-500 font-semibold hover:underline mt-3 inline-block">Read More→</a>
             </div>
           `;
           container.appendChild(card);
@@ -129,7 +129,7 @@ if (is_string($userBadges)) {
               <div class="p-6">
                 <h3 class="font-bold text-xl mb-2"><?= htmlspecialchars($blog['title']) ?></h3>
                 <p class="text-gray-600 text-sm mb-4">
-                  By <?= htmlspecialchars($blog['author']) ?> • <?= date('F j, Y', strtotime($blog['created_at'])) ?>
+                  By <?= htmlspecialchars($blog['author']) ?> • <?= date('j F, Y', strtotime($blog['created_at'])) ?>
                 </p>
                 <p class="text-gray-600 mb-4 line-clamp-3">
                   <?= htmlspecialchars(substr($blog['content'], 0, 100)) ?>...
