@@ -63,18 +63,21 @@ async function getWeatherData(city) {
   showLoading();
 
   try {
-    // Current weather fetch karte hain
-    const currentResponse = await fetch(`/api/weather.php?action=current&city=${encodeURIComponent(city)}`);
-    if (!currentResponse.ok) {
-      throw new Error('Failed to fetch current weather');
+    // Direct OpenWeatherMap API call
+    const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${WEATHER_API_KEY}&units=metric`;
+    
+    const response = await fetch(weatherUrl);
+    if (!response.ok) {
+      throw new Error('Failed to fetch weather data');
     }
-    const currentWeatherData = await currentResponse.json();
+    
+    const weatherData = await response.json();
 
-    if (currentWeatherData.error) {
-      throw new Error(currentWeatherData.message);
+    if (weatherData.cod !== 200) {
+      throw new Error(weatherData.message || 'Weather data not found');
     }
 
-    displayCurrentWeather(currentWeatherData);
+    displayCurrentWeather(weatherData);
 
     hideLoading();
 

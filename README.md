@@ -2,15 +2,15 @@
 
 A simplified travel blog platform built with PHP, MySQL, and modern web technologies. This version has been adapted for educational purposes with simplified security features and MySQLi database operations.
 
-> **⚠️ Important**: This is a student project version with simplified security features. **Do not use in production environments.**
-
 ## Features
 
 - **User Authentication**: Secure login/signup system
-- **Blog Management**: Create, read, and manage travel blogs
+- **Blog Management**: Create, read, edit, and delete travel blogs
 - **Trip Planning**: Plan and organize your trips
 - **Destination Explorer**: Discover popular destinations across India
+- **Weather Information**: Check current weather conditions for travel destinations
 - **Profile Management**: Customize your traveler profile
+- **Newsletter Subscription**: Stay updated with travel news
 - **Interactive Maps**: Explore destinations with Leaflet maps
 - **Responsive Design**: Mobile-friendly interface with Tailwind CSS
 
@@ -93,14 +93,20 @@ traveltales/
 ├── logout.php             # Logout handler
 ├── blogs.php              # Blog listing
 ├── add-blog.php           # Create new blog
+├── edit-blog.php          # Edit existing blog
+├── delete-blog.php        # Delete blog
 ├── view-blog.php          # View individual blog
+├── story.php              # Story viewer
 ├── profile.php            # User profile
 ├── edit-profile.php       # Edit profile
 ├── explore.php            # Destination explorer
 ├── trip-planner.php       # Trip planning
+├── weather.php            # Weather information
+├── newsletter-subscribe.php # Newsletter subscription
 ├── contact.php            # Contact form
 ├── about.php              # About page
 ├── error.php              # Error page
+├── setup_complete.php     # Database setup
 ├── config/
 │   ├── db.php             # Database connection
 │   ├── error_handler.php  # Error handling
@@ -119,11 +125,12 @@ traveltales/
 │   ├── js/
 │   │   ├── navbar.js      # Navigation functionality
 │   │   ├── trip-planner.js # Trip planning features
+│   │   ├── weather.js     # Weather functionality
 │   │   ├── contact.js     # Contact form handling
 │   │   └── forms.js       # Form validation
 │   └── images/            # Static images
 ├── api/
-│   └── fetchtrips.php     # API endpoints
+│   └── fetchtrips.php     # Trip data API
 ├── data/
 │   ├── stories.json       # Sample stories data
 │   └── blogs.json         # Sample blogs data
@@ -194,7 +201,13 @@ Each destination includes popular attractions with:
 
 ## API Endpoints
 
-- `fetchtrips.php?city=<city_name>` - Get attractions and city information
+- `api/fetchtrips.php?city=<city_name>` - Get attractions and city information
+
+## External APIs
+
+- **OpenWeatherMap API**: Direct frontend calls for weather data
+  - Current weather: `https://api.openweathermap.org/data/2.5/weather`
+  - Requires API key configuration in `public/js/weather.js`
 
 ## Technologies Used
 
@@ -232,10 +245,12 @@ For support or questions, please contact through the contact form on the website
 ### Version 1.0.0
 - Initial release
 - User authentication system
-- Blog management
+- Blog management (create, edit, delete)
 - Trip planning
 - Destination explorer
+- Weather information (current weather only)
 - Profile management
+- Newsletter subscription
 - Security enhancements
 - Error handling
 - Mobile responsive design
