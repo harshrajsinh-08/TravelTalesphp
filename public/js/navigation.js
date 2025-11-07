@@ -1,28 +1,10 @@
 // Mobile menu toggle aur navigation functionality
 document.addEventListener('DOMContentLoaded', () => {
-    // Page load hone pe authentication check karte hain
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
-    const userEmail = localStorage.getItem('userEmail');
+    // PHP session se authentication handle ho raha hai, localStorage check nahi karte
     
-    if (!isLoggedIn) {
-        window.location.href = 'login.html';
-        return;
-    }
-    
-    // Navbar mein user email display karte hain
-    if (userEmail) {
-        const userEmailElement = document.getElementById('userEmail');
-        if (userEmailElement) {
-            userEmailElement.textContent = userEmail;
-            userEmailElement.classList.remove('hidden');
-        }
-    }
-
-    // Logout functionality - localStorage clear kar ke login page pe bhej dete hain
+    // Logout functionality - server pe logout.php call karte hain
     function logout() {
-        localStorage.removeItem('isLoggedIn');
-        localStorage.removeItem('userEmail');
-        window.location.href = 'login.html';
+        window.location.href = 'logout.php';
     }
 
     const logoutBtn = document.getElementById('logoutBtn');
